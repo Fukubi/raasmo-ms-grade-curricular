@@ -16,72 +16,37 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
+import com.rasmoo.client.escola.gradecurricular.service.IMateriaService;
 
 @RestController
 @RequestMapping("/materia")
 public class MateriaController {
 	
 	@Autowired
-	private IMateriaRepository materiaRepository;
+	private IMateriaService materiaService;
 
 	@GetMapping
 	public ResponseEntity<List<MateriaEntity>> listarMaterias() {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(this.materiaRepository.findAll());	
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.OK).body(null);
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.listar());
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<MateriaEntity> consultaMateria(@PathVariable Long id) {
-		try {
-			return ResponseEntity.status(HttpStatus.OK).body(this.materiaRepository.findById(id).get());
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.OK).body(null);
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.consultar(id));
 	}
 	
 	@PostMapping
 	public ResponseEntity<Boolean> cadastrarMaterias(@RequestBody MateriaEntity materia) {
-		try {
-			this.materiaRepository.save(materia);
-			return ResponseEntity.status(HttpStatus.OK).body(true);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.OK).body(false);
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.cadastrar(materia));
 	}
 	
 	@PutMapping
 	public ResponseEntity<Boolean> atualizarMateria(@RequestBody MateriaEntity materia) {
-		try {
-			//buscamos pela materia que gostaríamos de atualizar
-			MateriaEntity materiaEntityAtualizada = this.materiaRepository.findById(materia.getId()).get();
-			
-			//atualizamos todos os valores
-			materiaEntityAtualizada.setNome(materia.getNome());
-			materiaEntityAtualizada.setCodigo(materia.getCodigo());
-			materiaEntityAtualizada.setHoras(materia.getHoras());
-			materiaEntityAtualizada.setNome(materia.getNome());
-			materiaEntityAtualizada.setFrequencia(materia.getFrequencia());
-			
-			//salvamos as alteracoes
-			this.materiaRepository.save(materiaEntityAtualizada);
-			
-			return ResponseEntity.status(HttpStatus.OK).body(true);
-			
-		}catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.atualizar(materia));
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Boolean> deletarMateria(@PathVariable Long id) {
-		try {
-			this.materiaRepository.deleteById(id);
-			return ResponseEntity.status(HttpStatus.OK).body(true);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.OK).body(false);
-		}
+		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.excluir(id));
 	}
 }
