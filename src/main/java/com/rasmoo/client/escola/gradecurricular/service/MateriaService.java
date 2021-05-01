@@ -4,10 +4,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
 import com.rasmoo.client.escola.gradecurricular.exception.MateriaException;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
@@ -19,16 +22,11 @@ public class MateriaService implements IMateriaService {
 	private IMateriaRepository materiaRepository;
 
 	@Override
-	public Boolean atualizar(MateriaEntity materia) {
+	public Boolean atualizar(MateriaDto materia) {
 		try {
-			MateriaEntity materiaConsultada = this.consultar(materia.getId());
-			MateriaEntity materiaEntityAtualizada = materiaConsultada;
-
-			materiaEntityAtualizada.setNome(materiaConsultada.getNome());
-			materiaEntityAtualizada.setCodigo(materiaConsultada.getCodigo());
-			materiaEntityAtualizada.setHoras(materiaConsultada.getHoras());
-			materiaEntityAtualizada.setNome(materiaConsultada.getNome());
-			materiaEntityAtualizada.setFrequencia(materiaConsultada.getFrequencia());
+			ModelMapper mapper = new ModelMapper();
+			MateriaDto materiaConsultada = this.consultar(materia.getId());
+			MateriaEntity materiaEntityAtualizada = mapper.map(materiaConsultada, MateriaEntity.class);
 
 			this.materiaRepository.save(materiaEntityAtualizada);
 
@@ -54,34 +52,37 @@ public class MateriaService implements IMateriaService {
 	}
 
 	@Override
-	public List<MateriaEntity> listar() {
+	public List<MateriaDto> listar() {
 		try {
-			return this.materiaRepository.findAll();
+			ModelMapper mapper = new ModelMapper();
+			return mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {}.getType());
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
 	}
 
 	@Override
-	public MateriaEntity consultar(final Long id) {
+	public MateriaDto consultar(final Long id) {
 		try {
 			Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(id);
 			if (materiaOptional.isPresent()) {
-				return materiaOptional.get();
+				ModelMapper mapper = new ModelMapper();
+				return mapper.map(materiaOptional, MateriaDto.class);
 			}
 			throw new MateriaException("Matéria não encontrada", HttpStatus.NOT_FOUND);
 		} catch (MateriaException m) {
 			throw m;
 		} catch (Exception e) {
-			throw new MateriaException("Erro interno identificado, Contate o suporte",
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new MateriaException("Erro interno identificado, Contate o suporte", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@Override
-	public Boolean cadastrar(final MateriaEntity materia) {
+	public Boolean cadastrar(final MateriaDto materia) {
 		try {
-			this.materiaRepository.save(materia);
+			ModelMapper mapper = new ModelMapper();
+			MateriaEntity materiaEntity = mapper.map(materia, MateriaEntity.class);
+			this.materiaRepository.save(materiaEntity);
 			return true;
 		} catch (Exception e) {
 			return false;
