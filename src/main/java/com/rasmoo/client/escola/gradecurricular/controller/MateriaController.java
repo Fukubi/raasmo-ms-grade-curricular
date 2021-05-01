@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
-import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
 import com.rasmoo.client.escola.gradecurricular.service.IMateriaService;
 
 @RestController
@@ -37,7 +36,7 @@ public class MateriaController {
 	
 	@PostMapping
 	public ResponseEntity<Boolean> cadastrarMaterias(@RequestBody MateriaEntity materia) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.materiaService.cadastrar(materia));
+		return ResponseEntity.status(HttpStatus.CREATED).body(this.materiaService.cadastrar(materia));
 	}
 	
 	@PutMapping
