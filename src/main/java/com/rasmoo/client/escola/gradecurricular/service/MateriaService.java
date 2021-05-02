@@ -68,14 +68,16 @@ public class MateriaService implements IMateriaService {
 	@Override
 	public List<MateriaDto> listar() {
 		try {
-			List<MateriaDto> materiaDto = this.mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {
-			}.getType());
-			
+			List<MateriaDto> materiaDto = this.mapper.map(this.materiaRepository.findAll(),
+					new TypeToken<List<MateriaDto>>() {
+					}.getType());
+
 			materiaDto.forEach(materia -> {
-				materia.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+				materia.add(WebMvcLinkBuilder
+						.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
 						.withSelfRel());
 			});
-			
+
 			return materiaDto;
 		} catch (MateriaException m) {
 			throw m;
@@ -110,6 +112,48 @@ public class MateriaService implements IMateriaService {
 			throw m;
 		} catch (Exception e) {
 			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public List<MateriaDto> listarPorHorarioMinimo(final int horaMinima) {
+		try {
+			List<MateriaDto> materiaDto = this.mapper.map(this.materiaRepository.findByHoraMinima(horaMinima),
+					new TypeToken<List<MateriaDto>>() {
+					}.getType());
+
+			materiaDto.forEach(materia -> {
+				materia.add(WebMvcLinkBuilder
+						.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+						.withSelfRel());
+			});
+
+			return materiaDto;
+		} catch (MateriaException m) {
+			throw m;
+		} catch (Exception e) {
+			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Override
+	public List<MateriaDto> listarPorFequencia(int frequencia) {
+		try {
+			List<MateriaDto> materiaDto = this.mapper.map(this.materiaRepository.findByFrequencia(frequencia),
+					new TypeToken<List<MateriaDto>>() {
+					}.getType());
+
+			materiaDto.forEach(materia -> {
+				materia.add(WebMvcLinkBuilder
+						.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+						.withSelfRel());
+			});
+			
+			return materiaDto;
+		} catch (MateriaException m) {
+			throw m;
+		} catch (Exception e) {
+			throw new MateriaException(MENSAGEM_ERRO, null);
 		}
 	}
 
