@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.rasmoo.client.escola.gradecurricular.controller.MateriaController;
 import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
 import com.rasmoo.client.escola.gradecurricular.exception.MateriaException;
@@ -23,10 +25,10 @@ public class MateriaService implements IMateriaService {
 
 	private static final String MENSAGEM_ERRO = "Erro interno identificado, Contate o suporte";
 	private static final String MATERIA_NAO_ENCONTRADA = "Matéria não encontrada";
-	
+
 	private IMateriaRepository materiaRepository;
 	private ModelMapper mapper;
-	
+
 	@Autowired
 	public MateriaService(IMateriaRepository materiaRepository) {
 		this.mapper = new ModelMapper();
@@ -66,7 +68,15 @@ public class MateriaService implements IMateriaService {
 	@Override
 	public List<MateriaDto> listar() {
 		try {
-			return this.mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {}.getType());
+			List<MateriaDto> materiaDto = this.mapper.map(this.materiaRepository.findAll(), new TypeToken<List<MateriaDto>>() {
+			}.getType());
+			
+			materiaDto.forEach(materia -> {
+				materia.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+						.withSelfRel());
+			});
+			
+			return materiaDto;
 		} catch (MateriaException m) {
 			throw m;
 		} catch (Exception e) {
