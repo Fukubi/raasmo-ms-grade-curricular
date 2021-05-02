@@ -1,12 +1,14 @@
 package com.rasmoo.client.escola.gradecurricular.service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
 import com.rasmoo.client.escola.gradecurricular.exception.MateriaException;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
 
+@CacheConfig(cacheNames = "materia")
 @Service
 public class MateriaService implements IMateriaService {
 
@@ -59,6 +62,7 @@ public class MateriaService implements IMateriaService {
 		}
 	}
 
+	@CachePut(unless = "#result.size()<3")
 	@Override
 	public List<MateriaDto> listar() {
 		try {
@@ -70,6 +74,7 @@ public class MateriaService implements IMateriaService {
 		}
 	}
 
+	@CachePut(key = "#id")
 	@Override
 	public MateriaDto consultar(final Long id) {
 		try {
