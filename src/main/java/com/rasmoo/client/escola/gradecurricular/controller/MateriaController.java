@@ -38,7 +38,7 @@ public class MateriaController {
 
 	@GetMapping
 	public ResponseEntity<Response<List<MateriaDto>>> listarMaterias() {
-		Response<List<MateriaDto>> response = new Response();
+		Response<List<MateriaDto>> response = new Response<>();
 		response.setData(this.materiaService.listar());
 		response.setStatusCode(HttpStatus.OK.value());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).listarMaterias())

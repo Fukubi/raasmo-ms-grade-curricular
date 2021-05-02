@@ -10,4 +10,9 @@ import lombok.EqualsAndHashCode;
 public class Response<T> extends RepresentationModel<Response<T>> {
 	private int statusCode;
 	private T data;
+	private Long timeStamp;
+	
+	public Response() {
+		this.timeStamp = System.currentTimeMillis();
+	}
 }
