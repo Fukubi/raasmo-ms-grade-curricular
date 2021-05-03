@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 import com.rasmoo.client.escola.gradecurricular.controller.CursoController;
 import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
 import com.rasmoo.client.escola.gradecurricular.entity.CursoEntity;
+import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
 import com.rasmoo.client.escola.gradecurricular.exception.CursoException;
+import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
 import com.rasmoo.client.escola.gradecurricular.repository.ICursoRepository;
+import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
 
 @CacheConfig(cacheNames = "curso")
 @Service
@@ -26,18 +29,30 @@ public class CursoService implements ICursoService {
 	private static final String CURSO_NAO_ENCONTRADO = "Curso não encontrado";
 
 	private ICursoRepository cursoRepository;
+	private IMateriaRepository materiaRepository;
 	private ModelMapper mapper;
 
 	@Autowired
-	public CursoService(ICursoRepository cursoRepository) {
+	public CursoService(ICursoRepository cursoRepository, IMateriaRepository materiaRepository) {
 		this.mapper = new ModelMapper();
 		this.cursoRepository = cursoRepository;
+		this.materiaRepository = materiaRepository;
 	}
 
 	@Override
-	public Boolean cadastrar(CursoDto curso) {
+	public Boolean cadastrar(CursoModel curso) {
 		try {
-			CursoEntity cursoEntity = this.mapper.map(curso, CursoEntity.class);
+			CursoDto cursoDto = this.mapper.map(curso, CursoDto.class);
+			
+			curso.getMaterias().forEach(materiaId -> {
+				Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(materiaId);
+				if (materiaOptional.isEmpty()) {
+					throw new CursoException("Matéria não encontrada", HttpStatus.NOT_FOUND);
+				}
+				cursoDto.getMaterias().add(materiaOptional.get());
+			});
+			
+			CursoEntity cursoEntity = this.mapper.map(cursoDto, CursoEntity.class);
 			this.cursoRepository.save(cursoEntity);
 			return Boolean.TRUE;
 		} catch (CursoException c) {
@@ -89,10 +104,20 @@ public class CursoService implements ICursoService {
 	}
 
 	@Override
-	public Boolean atualizar(CursoDto curso) {
+	public Boolean atualizar(CursoModel curso) {
 		try {
-			this.consultar(curso.getId());
-			CursoEntity cursoEntityAtualizado = this.mapper.map(curso, CursoEntity.class);
+			CursoDto cursoDto = new CursoDto();
+			
+			curso.getMaterias().forEach(materiaId -> {
+				Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(materiaId);
+				if (materiaOptional.isEmpty()) {
+					throw new CursoException("Matéria não encontrada", HttpStatus.NOT_FOUND);
+				}
+				cursoDto.getMaterias().add(materiaOptional.get());
+			});
+			
+			this.consultar(cursoDto.getId());
+			CursoEntity cursoEntityAtualizado = this.mapper.map(cursoDto, CursoEntity.class);
 
 			this.cursoRepository.save(cursoEntityAtualizado);
 

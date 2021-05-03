@@ -3,10 +3,11 @@ package com.rasmoo.client.escola.gradecurricular.service;
 import java.util.List;
 
 import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
+import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
 
 public interface ICursoService {
 
-	public Boolean cadastrar(final CursoDto curso);
+	public Boolean cadastrar(final CursoModel curso);
 	
 	public List<CursoDto> listar();
 	
@@ -14,7 +15,7 @@ public interface ICursoService {
 	
 	public List<CursoDto> consultarPorCodigo(final String codigo);
 	
-	public Boolean atualizar(final CursoDto curso);
+	public Boolean atualizar(final CursoModel curso);
 	
 	public Boolean excluir(final Long id);
 	

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rasmoo.client.escola.gradecurricular.constante.HyperLinkConstant;
 import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
+import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
 import com.rasmoo.client.escola.gradecurricular.model.Response;
 import com.rasmoo.client.escola.gradecurricular.service.ICursoService;
 
@@ -31,7 +32,7 @@ public class CursoController {
 	private ICursoService cursoService;
 
 	@PostMapping
-	public ResponseEntity<Response<Boolean>> cadastrarCurso(@Valid @RequestBody CursoDto curso) {
+	public ResponseEntity<Response<Boolean>> cadastrarCurso(@Valid @RequestBody CursoModel curso) {
 		Response<Boolean> response = new Response<>();
 		response.setData(this.cursoService.cadastrar(curso));
 		response.setStatusCode(HttpStatus.CREATED.value());
