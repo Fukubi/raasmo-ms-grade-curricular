@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rasmoo.client.escola.gradecurricular.constante.HyperLinkConstant;
+import com.rasmoo.client.escola.gradecurricular.constant.HyperLinkConstant;
 import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
 import com.rasmoo.client.escola.gradecurricular.model.Response;
 import com.rasmoo.client.escola.gradecurricular.service.IMateriaService;

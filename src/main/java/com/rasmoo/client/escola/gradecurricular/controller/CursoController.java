@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rasmoo.client.escola.gradecurricular.constante.HyperLinkConstant;
+import com.rasmoo.client.escola.gradecurricular.constant.HyperLinkConstant;
 import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
 import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
 import com.rasmoo.client.escola.gradecurricular.model.Response;
