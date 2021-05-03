@@ -34,14 +34,14 @@ public class CursoController {
 	public ResponseEntity<Response<Boolean>> cadastrarCurso(@Valid @RequestBody CursoDto curso) {
 		Response<Boolean> response = new Response<>();
 		response.setData(this.cursoService.cadastrar(curso));
-		response.setStatusCode(HttpStatus.OK.value());
+		response.setStatusCode(HttpStatus.CREATED.value());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).cadastrarCurso(curso))
 				.withSelfRel());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).atualizarCurso(curso))
 				.withRel(HyperLinkConstant.ATUALIZAR.getValor()));
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).listarCurso())
 				.withRel(HyperLinkConstant.LISTAR.getValor()));
-		return ResponseEntity.status(HttpStatus.OK).body(response);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 	@GetMapping
