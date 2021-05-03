@@ -75,15 +75,19 @@ public class CursoController {
 		response.setStatusCode(HttpStatus.OK.value());
 		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).consultar(id))
 				.withSelfRel());
-		response.add(WebMvcLinkBuilder
-				.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).atualizarCurso(response.getData()))
-				.withRel(HyperLinkConstant.ATUALIZAR.getValor()));
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@PutMapping
-	public ResponseEntity<Void> atualizarCurso(@Valid @RequestBody CursoDto curso) {
-		throw new NotYetImplementedException();
+	public ResponseEntity<Response<Boolean>> atualizarCurso(@Valid @RequestBody CursoModel curso) {
+		Response<Boolean> response = new Response<>();
+		response.setData(this.cursoService.atualizar(curso));
+		response.setStatusCode(HttpStatus.OK.value());
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).atualizarCurso(curso))
+				.withSelfRel());
+		response.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).listarCurso())
+				.withRel(HyperLinkConstant.LISTAR.getValor()));
+		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
 	@DeleteMapping("/{id}")
