@@ -2,6 +2,7 @@ package com.rasmoo.client.escola.gradecurricular.controller.test;
 
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -112,6 +113,83 @@ class MateriaControllerIntegratedTest {
 
 		assertNotNull(materias.getBody().getData());
 		assertEquals(1, materias.getBody().getData().size());
+		assertEquals(200, materias.getBody().getStatusCode());
+	}
+	
+	@Test
+	void testConsultarMateriaPorId() {
+		List<MateriaEntity> materiasList = this.materiaRepository.findAll();
+		Long id = materiasList.get(0).getId();
+		
+		ResponseEntity<Response<MateriaDto>> materias = restTemplate.exchange(
+				"http://localhost:" + this.port + "/materia/"+id, HttpMethod.GET, null,
+				new ParameterizedTypeReference<Response<MateriaDto>>() {
+				});
+
+		assertNotNull(materias.getBody().getData());
+		assertEquals(id, materias.getBody().getData().getId());
+		assertEquals(64, materias.getBody().getData().getHoras());
+		assertEquals("ILP", materias.getBody().getData().getCodigo());
+		assertEquals(200, materias.getBody().getStatusCode());
+	}
+	
+	@Test
+	void testAtualizarMateria() {
+		List<MateriaEntity> materiasList = this.materiaRepository.findAll();
+		MateriaEntity materia = materiasList.get(0);
+		
+		materia.setNome("TESTE ATUALIZA MATERIA");
+		
+		HttpEntity<MateriaEntity> request = new HttpEntity<>(materia);
+		
+		ResponseEntity<Response<Boolean>> materias = restTemplate.exchange(
+				"http://localhost:" + this.port + "/materia/", HttpMethod.PUT, request,
+				new ParameterizedTypeReference<Response<Boolean>>() {
+				});
+		
+		MateriaEntity materiaAtualizada = this.materiaRepository.findById(materia.getId()).get();
+
+		assertTrue(materias.getBody().getData());
+		assertEquals("TESTE ATUALIZA MATERIA", materiaAtualizada.getNome());
+		assertEquals(200, materias.getBody().getStatusCode());
+	}
+	
+	@Test
+	void testCadastrarMateria() {
+		MateriaEntity m4 = new MateriaEntity();
+		m4.setCodigo("CALC1");
+		m4.setFrequencia(2);
+		m4.setHoras(102);
+		m4.setNome("CALCULO 1");
+		
+		HttpEntity<MateriaEntity> request = new HttpEntity<>(m4);
+		
+		ResponseEntity<Response<Boolean>> materias = restTemplate.exchange(
+				"http://localhost:" + this.port + "/materia/", HttpMethod.POST, request,
+				new ParameterizedTypeReference<Response<Boolean>>() {
+				});
+		
+		List<MateriaEntity> listMateriaAtualizada = this.materiaRepository.findAll();
+
+		assertTrue(materias.getBody().getData());
+		assertEquals(4, listMateriaAtualizada.size());
+		assertEquals(201, materias.getBody().getStatusCode());
+	}
+	
+	@Test
+	void testExcluirMateriaPorId() {
+		List<MateriaEntity> materiasList = this.materiaRepository.findAll();
+		Long id = materiasList.get(0).getId();
+		
+		ResponseEntity<Response<Boolean>> materias = restTemplate.exchange(
+				"http://localhost:" + this.port + "/materia/"+id, HttpMethod.DELETE, null,
+				new ParameterizedTypeReference<Response<Boolean>>() {
+				});
+
+		List<MateriaEntity> listMateriaAtualizada = this.materiaRepository.findAll();
+		
+		assertTrue(materias.getBody().getData());
+		assertEquals(2, listMateriaAtualizada.size());
 		assertEquals(200, materias.getBody().getStatusCode());
 	}
 
