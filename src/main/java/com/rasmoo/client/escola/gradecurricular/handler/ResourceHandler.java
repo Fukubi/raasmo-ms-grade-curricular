@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.rasmoo.client.escola.gradecurricular.exception.CursoException;
 import com.rasmoo.client.escola.gradecurricular.exception.MateriaException;
 import com.rasmoo.client.escola.gradecurricular.model.Response;
 
@@ -38,6 +39,14 @@ public class ResourceHandler {
 		response.setStatusCode(m.getHttpStatus().value());
 		response.setData(m.getMessage());
 		return ResponseEntity.status(m.getHttpStatus()).body(response);
+	}
+	
+	@ExceptionHandler(CursoException.class)
+	public ResponseEntity<Response<String>> handlerCursoException(CursoException c) {
+		Response<String> response = new Response<>();
+		response.setStatusCode(c.getHttpStatus().value());
+		response.setData(c.getMessage());
+		return ResponseEntity.status(c.getHttpStatus()).body(response);
 	}
 
 }

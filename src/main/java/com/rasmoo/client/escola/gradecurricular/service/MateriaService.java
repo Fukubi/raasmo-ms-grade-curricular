@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
@@ -72,11 +71,9 @@ public class MateriaService implements IMateriaService {
 					new TypeToken<List<MateriaDto>>() {
 					}.getType());
 
-			materiaDto.forEach(materia -> {
-				materia.add(WebMvcLinkBuilder
-						.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
-						.withSelfRel());
-			});
+			materiaDto.forEach(materia -> materia.add(WebMvcLinkBuilder
+					.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+					.withSelfRel()));
 
 			return materiaDto;
 		} catch (MateriaException m) {
@@ -122,11 +119,9 @@ public class MateriaService implements IMateriaService {
 					new TypeToken<List<MateriaDto>>() {
 					}.getType());
 
-			materiaDto.forEach(materia -> {
-				materia.add(WebMvcLinkBuilder
-						.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
-						.withSelfRel());
-			});
+			materiaDto.forEach(materia -> materia.add(WebMvcLinkBuilder
+					.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+					.withSelfRel()));
 
 			return materiaDto;
 		} catch (MateriaException m) {
@@ -143,12 +138,10 @@ public class MateriaService implements IMateriaService {
 					new TypeToken<List<MateriaDto>>() {
 					}.getType());
 
-			materiaDto.forEach(materia -> {
-				materia.add(WebMvcLinkBuilder
-						.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
-						.withSelfRel());
-			});
-			
+			materiaDto.forEach(materia -> materia.add(WebMvcLinkBuilder
+					.linkTo(WebMvcLinkBuilder.methodOn(MateriaController.class).consultarMateria(materia.getId()))
+					.withSelfRel()));
+
 			return materiaDto;
 		} catch (MateriaException m) {
 			throw m;
