@@ -31,7 +31,7 @@ import com.rasmoo.client.escola.gradecurricular.service.IMateriaService;
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(JUnitPlatform.class)
-public class MateriaControllerUnitTest {
+class MateriaControllerUnitTest {
 
 	@LocalServerPort
 	private int port;
