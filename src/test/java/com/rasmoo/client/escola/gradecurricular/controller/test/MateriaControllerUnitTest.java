@@ -46,7 +46,6 @@ class MateriaControllerUnitTest {
 
 	@BeforeAll
 	public static void init() {
-		
 		materiaDto = new MateriaDto();
 		materiaDto.setId(1L);
 		materiaDto.setCodigo("ILP");
