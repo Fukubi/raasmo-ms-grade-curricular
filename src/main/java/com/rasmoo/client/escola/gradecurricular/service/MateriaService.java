@@ -38,11 +38,8 @@ public class MateriaService implements IMateriaService {
 	public Boolean atualizar(MateriaDto materia) {
 		try {
 			this.consultar(materia.getId());
-			MateriaEntity materiaEntityAtualizada = this.mapper.map(materia, MateriaEntity.class);
-
-			this.materiaRepository.save(materiaEntityAtualizada);
-
-			return Boolean.TRUE;
+			
+			return this.cadastrarOuAtualizar(materia);
 		} catch (MateriaException m) {
 			throw m;
 		} catch (Exception e) {
@@ -102,14 +99,26 @@ public class MateriaService implements IMateriaService {
 	@Override
 	public Boolean cadastrar(final MateriaDto materia) {
 		try {
-			MateriaEntity materiaEntity = this.mapper.map(materia, MateriaEntity.class);
-			this.materiaRepository.save(materiaEntity);
-			return Boolean.TRUE;
+			if (materia.getId() != null) {
+				throw new MateriaException("ID não foi informado", HttpStatus.BAD_REQUEST);
+			}
+
+			if (this.materiaRepository.findByCodigo(materia.getCodigo()) != null) {
+				throw new MateriaException("Esse código já está cadastrado em uma matéria", HttpStatus.BAD_REQUEST);
+			}
+			
+			return this.cadastrarOuAtualizar(materia);
 		} catch (MateriaException m) {
 			throw m;
 		} catch (Exception e) {
 			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+	
+	private Boolean cadastrarOuAtualizar(final MateriaDto materia) {
+		MateriaEntity materiaEntity = this.mapper.map(materia, MateriaEntity.class);
+		this.materiaRepository.save(materiaEntity);
+		return Boolean.TRUE;
 	}
 
 	@Override

@@ -17,4 +17,7 @@ public interface IMateriaRepository extends JpaRepository<MateriaEntity, Long> {
 	
 	@Query("select m from MateriaEntity m where m.frequencia = :frequencia")
 	public List<MateriaEntity> findByFrequencia(@Param("frequencia") int frequencia);
+	
+	@Query("select m from MateriaEntity m where m.codigo = :codigo")
+	public MateriaEntity findByCodigo(@Param("codigo")String codigo);
 }

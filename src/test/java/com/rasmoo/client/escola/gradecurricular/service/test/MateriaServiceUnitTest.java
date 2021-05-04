@@ -1,11 +1,13 @@
 package com.rasmoo.client.escola.gradecurricular.service.test;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -95,5 +97,75 @@ class MateriaServiceUnitTest {
 		assertEquals(1, listMateriaDto.size());
 		
 		Mockito.verify(this.materiaRepository, times(1)).findByFrequencia(1);
+	}
+	
+	@Test
+	void testConsultarSucesso() {
+		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.of(materiaEntity));
+		MateriaDto materiaDto = this.materiaService.consultar(1L);
+		
+		assertNotNull(materiaDto);
+		assertEquals("ILP", materiaDto.getCodigo());
+		assertEquals(1L, materiaDto.getId());
+		assertEquals(1, materiaDto.getFrequencia());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+	}
+	
+	@Test
+	void testCadastrarSucesso() {
+		MateriaDto materiaDto = new MateriaDto();
+		materiaDto.setCodigo("ILP");
+		materiaDto.setFrequencia(1);
+		materiaDto.setHoras(64);
+		materiaDto.setNome("INTRODUCAO A LINGUAGEM DE PROGRAMACAO");
+		
+		materiaEntity.setId(null);
+		
+		Mockito.when(this.materiaRepository.findByCodigo("ILP")).thenReturn(null);
+		Mockito.when(this.materiaRepository.save(materiaEntity)).thenReturn(materiaEntity);
+		
+		Boolean sucesso = this.materiaService.cadastrar(materiaDto);
+		
+		assertTrue(sucesso);
+		
+		Mockito.verify(this.materiaRepository, times(1)).findByCodigo("ILP");
+		Mockito.verify(this.materiaRepository, times(1)).save(materiaEntity);
+		
+		materiaEntity.setId(1L);
+	}
+	
+	@Test
+	void testAtualizarSucesso() {
+		MateriaDto materiaDto = new MateriaDto();
+		materiaDto.setId(1L);
+		materiaDto.setCodigo("ILP");
+		materiaDto.setFrequencia(1);
+		materiaDto.setHoras(64);
+		materiaDto.setNome("INTRODUCAO A LINGUAGEM DE PROGRAMACAO");
+		
+		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.of(materiaEntity));
+		Mockito.when(this.materiaRepository.save(materiaEntity)).thenReturn(materiaEntity);
+		
+		Boolean sucesso = this.materiaService.atualizar(materiaDto);
+		
+		assertTrue(sucesso);
+		
+		Mockito.verify(this.materiaRepository, times(0)).findByCodigo("ILP");
+		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+		Mockito.verify(this.materiaRepository, times(1)).save(materiaEntity);
+	}
+	
+	@Test
+	void testExcluirSucesso() {
+		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.of(materiaEntity));
+		Boolean sucesso = this.materiaService.excluir(1L);
+		
+		assertTrue(sucesso);
+		
+		Mockito.verify(this.materiaRepository, times(0)).findByCodigo("ILP");
+		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+		Mockito.verify(this.materiaRepository, times(1)).deleteById(1L);
+		Mockito.verify(this.materiaRepository, times(0)).save(materiaEntity);
 	}
 }
