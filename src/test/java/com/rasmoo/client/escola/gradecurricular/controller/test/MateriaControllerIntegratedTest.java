@@ -1,27 +1,20 @@
 package com.rasmoo.client.escola.gradecurricular.controller.test;
 
-import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
@@ -33,7 +26,6 @@ import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
 import com.rasmoo.client.escola.gradecurricular.model.Response;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
-import com.rasmoo.client.escola.gradecurricular.service.IMateriaService;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(JUnitPlatform.class)

@@ -155,7 +155,7 @@ public class MateriaService implements IMateriaService {
 		} catch (MateriaException m) {
 			throw m;
 		} catch (Exception e) {
-			throw new MateriaException(MENSAGEM_ERRO, null);
+			throw new MateriaException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

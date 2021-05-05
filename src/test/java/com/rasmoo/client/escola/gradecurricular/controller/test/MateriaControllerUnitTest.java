@@ -41,7 +41,7 @@ class MateriaControllerUnitTest {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
-	
+
 	private static MateriaDto materiaDto;
 
 	@BeforeAll
@@ -66,7 +66,7 @@ class MateriaControllerUnitTest {
 		assertNotNull(materias.getBody().getData());
 		assertEquals(200, materias.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testConsultarMateria() {
 		Mockito.when(this.materiaService.consultar(1L)).thenReturn(materiaDto);
@@ -79,11 +79,11 @@ class MateriaControllerUnitTest {
 		assertNotNull(materias.getBody().getData());
 		assertEquals(200, materias.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testCadastrarMaterias() {
 		Mockito.when(this.materiaService.cadastrar(materiaDto)).thenReturn(true);
-		
+
 		HttpEntity<MateriaDto> request = new HttpEntity<>(materiaDto);
 
 		ResponseEntity<Response<Boolean>> materias = restTemplate.exchange(
@@ -94,11 +94,11 @@ class MateriaControllerUnitTest {
 		assertNotNull(materias.getBody().getData());
 		assertEquals(201, materias.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testAtualizarMaterias() {
 		Mockito.when(this.materiaService.atualizar(materiaDto)).thenReturn(Boolean.TRUE);
-		
+
 		HttpEntity<MateriaDto> request = new HttpEntity<>(materiaDto);
 
 		ResponseEntity<Response<Boolean>> materias = restTemplate.exchange(
@@ -109,7 +109,7 @@ class MateriaControllerUnitTest {
 		assertNotNull(materias.getBody().getData());
 		assertEquals(200, materias.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testExcluirMaterias() {
 		Mockito.when(this.materiaService.excluir(1L)).thenReturn(Boolean.TRUE);
@@ -122,7 +122,7 @@ class MateriaControllerUnitTest {
 		assertNotNull(materias.getBody().getData());
 		assertEquals(200, materias.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testConsultarMateriasPorHoraMinima() {
 		Mockito.when(this.materiaService.listarPorHorarioMinimo(64)).thenReturn(new ArrayList<MateriaDto>());
@@ -135,7 +135,7 @@ class MateriaControllerUnitTest {
 		assertNotNull(materias.getBody().getData());
 		assertEquals(200, materias.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testConsultarMateriasPorFrequencia() {
 		Mockito.when(this.materiaService.listarPorFequencia(1)).thenReturn(new ArrayList<MateriaDto>());

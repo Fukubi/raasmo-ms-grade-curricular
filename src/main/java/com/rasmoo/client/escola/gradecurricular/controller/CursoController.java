@@ -55,8 +55,8 @@ public class CursoController {
 	}
 
 	@GetMapping("/codigo/{codCurso}")
-	public ResponseEntity<Response<List<CursoDto>>> consultarCursoPorCodigo(@PathVariable String codCurso) {
-		Response<List<CursoDto>> response = new Response<>();
+	public ResponseEntity<Response<CursoDto>> consultarCursoPorCodigo(@PathVariable String codCurso) {
+		Response<CursoDto> response = new Response<>();
 		response.setData(this.cursoService.consultarPorCodigo(codCurso));
 		response.setStatusCode(HttpStatus.OK.value());
 		response.add(WebMvcLinkBuilder

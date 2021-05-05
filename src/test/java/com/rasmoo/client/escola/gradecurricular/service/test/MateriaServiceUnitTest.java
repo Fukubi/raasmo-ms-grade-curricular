@@ -21,7 +21,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import com.rasmoo.client.escola.gradecurricular.constant.HyperLinkConstant;
 import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
 import com.rasmoo.client.escola.gradecurricular.exception.MateriaException;
@@ -257,5 +256,179 @@ class MateriaServiceUnitTest {
 		
 		Mockito.verify(this.materiaRepository, times(1)).findByCodigo("ILP");
 		Mockito.verify(this.materiaRepository, times(0)).save(materiaEntity);
+	}
+	
+	@Test
+	void testConsultarThrowMateriaException() {
+		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.empty());
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.consultar(1L);
+		});
+		
+		assertEquals(HttpStatus.NOT_FOUND, materiaException.getHttpStatus());
+		assertEquals("Matéria não encontrada", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+	}
+	
+	@Test
+	void testAtualizarThrowException() {
+		MateriaDto materiaDto = new MateriaDto();
+		materiaDto.setId(1L);
+		materiaDto.setCodigo("ILP");
+		materiaDto.setFrequencia(1);
+		materiaDto.setHoras(64);
+		materiaDto.setNome("INTRODUCAO A LINGUAGEM DE PROGRAMACAO");
+		
+		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.of(materiaEntity));
+		Mockito.when(this.materiaRepository.save(materiaEntity)).thenThrow(IllegalStateException.class);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.atualizar(materiaDto);
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+		Mockito.verify(this.materiaRepository, times(1)).save(materiaEntity);
+	}
+	
+	@Test
+	void testCadastrarComCodigoExistenteThrowException() {
+		MateriaDto materiaDto = new MateriaDto();
+		materiaDto.setCodigo("ILP");
+		materiaDto.setFrequencia(1);
+		materiaDto.setHoras(64);
+		materiaDto.setNome("INTRODUCAO A LINGUAGEM DE PROGRAMACAO");
+		
+		Mockito.when(this.materiaRepository.findByCodigo("ILP")).thenThrow(IllegalStateException.class);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.cadastrar(materiaDto);
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findByCodigo("ILP");
+		Mockito.verify(this.materiaRepository, times(0)).save(materiaEntity);
+	}
+	
+	@Test
+	void testCadastrarThrowException() {
+		MateriaDto materiaDto = new MateriaDto();
+		materiaDto.setCodigo("ILP");
+		materiaDto.setFrequencia(1);
+		materiaDto.setHoras(64);
+		materiaDto.setNome("INTRODUCAO A LINGUAGEM DE PROGRAMACAO");
+		
+		materiaEntity.setId(null);
+		
+		Mockito.when(this.materiaRepository.findByCodigo("ILP")).thenReturn(null);
+		Mockito.when(this.materiaRepository.save(materiaEntity)).thenThrow(IllegalStateException.class);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.cadastrar(materiaDto);
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findByCodigo("ILP");
+		Mockito.verify(this.materiaRepository, times(1)).save(materiaEntity);
+		
+		materiaEntity.setId(1L);
+	}
+	
+	@Test
+	void testConsultarThrowException() {
+		Mockito.when(this.materiaRepository.findById(1L)).thenThrow(IllegalStateException.class);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.consultar(1L);
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+	}
+	
+	@Test
+	void testListarThrowException() {
+		Mockito.when(this.materiaRepository.findAll()).thenThrow(IllegalStateException.class);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.listar();
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findAll();
+	}
+	
+	@Test
+	void testListarHorarioMinimoThrowException() {
+		Mockito.when(this.materiaRepository.findByHoraMinima(64)).thenThrow(IllegalStateException.class);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.listarPorHorarioMinimo(64);
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findByHoraMinima(64);
+	}
+	
+	@Test
+	void testListarPorFrequenciaThrowException() {
+		Mockito.when(this.materiaRepository.findByFrequencia(1)).thenThrow(IllegalStateException.class);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.listarPorFequencia(1);
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findByFrequencia(1);
+	}
+	
+	@Test
+	void testExcluirThrowException() {
+		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.of(materiaEntity));
+		Mockito.doThrow(IllegalStateException.class).when(this.materiaRepository).deleteById(1L);
+		
+		MateriaException materiaException;
+		
+		materiaException = assertThrows(MateriaException.class, () -> {
+			this.materiaService.excluir(1L);
+		});
+		
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, materiaException.getHttpStatus());
+		assertEquals("Erro interno identificado, Contate o suporte", materiaException.getMessage());
+		
+		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+		Mockito.verify(this.materiaRepository, times(1)).deleteById(1L);
 	}
 }

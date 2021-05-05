@@ -13,7 +13,7 @@ public interface ICursoService {
 	
 	public CursoDto consultar(final Long id);
 	
-	public List<CursoDto> consultarPorCodigo(final String codigo);
+	public CursoDto consultarPorCodigo(final String codigo);
 	
 	public Boolean atualizar(final CursoModel curso);
 	

@@ -26,7 +26,7 @@ public class CursoDto extends RepresentationModel<CursoDto> {
 	
 	@NotBlank(message = "código deve ser preenchido")
 	@Size(min = 3, max = 6, message = "O código deve ter no máximo 6 caracteres e no mínimo 3")
-	private String codCurso;
+	private String codigo;
 	
 	private List<MateriaEntity> materias;
 }

@@ -9,13 +9,15 @@ import lombok.Data;
 
 @Data
 public class CursoModel {
+	private Long id;
+	
 	@NotBlank(message = "nome deve ser preenchido")
 	@Size(min = 10, max = 30)
 	private String nome;
 	
 	@NotBlank(message = "código deve ser preenchido")
-	@Size(min = 10, max = 30)
-	private String codCurso;
+	@Size(min = 3, max = 6)
+	private String codigo;
 	
 	private List<Long> materias;
 }

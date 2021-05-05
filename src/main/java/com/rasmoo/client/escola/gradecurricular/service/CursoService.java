@@ -1,5 +1,6 @@
 package com.rasmoo.client.escola.gradecurricular.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +22,11 @@ import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
 import com.rasmoo.client.escola.gradecurricular.repository.ICursoRepository;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @CacheConfig(cacheNames = "curso")
 @Service
+@Slf4j
 public class CursoService implements ICursoService {
 
 	private static final String MENSAGEM_ERRO = "Erro interno identificado, contate o suporte";
@@ -42,7 +46,14 @@ public class CursoService implements ICursoService {
 	@Override
 	public Boolean cadastrar(CursoModel curso) {
 		try {
-			CursoDto cursoDto = this.mapper.map(curso, CursoDto.class);
+			if (this.cursoRepository.findByCodigo(curso.getCodigo()).isPresent()) {
+				throw new CursoException("Este código já foi cadastrado", HttpStatus.BAD_REQUEST);
+			}
+			
+			CursoDto cursoDto = new CursoDto();
+			cursoDto.setMaterias(new ArrayList<>());
+			cursoDto.setCodigo(curso.getCodigo());
+			cursoDto.setNome(curso.getNome());
 			
 			curso.getMaterias().forEach(materiaId -> {
 				Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(materiaId);
@@ -82,18 +93,11 @@ public class CursoService implements ICursoService {
 
 	@CachePut(key = "#codigo")
 	@Override
-	public List<CursoDto> consultarPorCodigo(String codigo) {
+	public CursoDto consultarPorCodigo(String codigo) {
 		try {
-			Optional<List<CursoEntity>> cursoOptional = this.cursoRepository.findByCodigo(codigo);
+			Optional<CursoEntity> cursoOptional = this.cursoRepository.findByCodigo(codigo);
 			if (cursoOptional.isPresent()) {
-				List<CursoDto> cursoDto = this.mapper.map(cursoOptional.get(), new TypeToken<List<CursoDto>>() {
-				}.getType());
-
-				cursoDto.forEach(curso -> curso.add(WebMvcLinkBuilder
-						.linkTo(WebMvcLinkBuilder.methodOn(CursoController.class).consultar(curso.getId()))
-						.withSelfRel()));
-
-				return cursoDto;
+				return this.mapper.map(cursoOptional.get(), CursoDto.class);
 			}
 			throw new CursoException(CURSO_NAO_ENCONTRADO, HttpStatus.NOT_FOUND);
 		} catch (CursoException c) {
@@ -107,6 +111,7 @@ public class CursoService implements ICursoService {
 	public Boolean atualizar(CursoModel curso) {
 		try {
 			CursoDto cursoDto = new CursoDto();
+			cursoDto.setMaterias(new ArrayList<>());
 			
 			curso.getMaterias().forEach(materiaId -> {
 				Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(materiaId);
@@ -116,8 +121,12 @@ public class CursoService implements ICursoService {
 				cursoDto.getMaterias().add(materiaOptional.get());
 			});
 			
-			this.consultar(cursoDto.getId());
+			cursoDto.setId(curso.getId());
+			cursoDto.setCodigo(curso.getCodigo());
+			cursoDto.setNome(curso.getNome());
+			
 			CursoEntity cursoEntityAtualizado = this.mapper.map(cursoDto, CursoEntity.class);
+			log.info("ID do curso: " + cursoDto.getId());
 
 			this.cursoRepository.save(cursoEntityAtualizado);
 
@@ -125,6 +134,7 @@ public class CursoService implements ICursoService {
 		} catch (CursoException c) {
 			throw c;
 		} catch (Exception e) {
+			log.error(e.toString());
 			throw new CursoException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -141,6 +151,7 @@ public class CursoService implements ICursoService {
 		} catch (CursoException c) {
 			throw c;
 		} catch (Exception e) {
+			
 			throw new CursoException(MENSAGEM_ERRO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
