@@ -17,11 +17,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rasmoo.client.escola.gradecurricular.config.SwaggerConfig;
 import com.rasmoo.client.escola.gradecurricular.constant.HyperLinkConstant;
 import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
 import com.rasmoo.client.escola.gradecurricular.model.Response;
 import com.rasmoo.client.escola.gradecurricular.service.IMateriaService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@Api(tags = SwaggerConfig.MATERIA)
 @RestController
 @RequestMapping("/materia")
 public class MateriaController {
@@ -29,6 +36,11 @@ public class MateriaController {
 	@Autowired
 	private IMateriaService materiaService;
 
+	@ApiOperation("Listar todas as matérias cadastradas")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Matérias listadas com sucesso"),
+			@ApiResponse(code = 500, message = "Erro interno no servidor")
+	})
 	@GetMapping
 	public ResponseEntity<Response<List<MateriaDto>>> listarMaterias() {
 		Response<List<MateriaDto>> response = new Response<>();
@@ -39,6 +51,12 @@ public class MateriaController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation("Consultar matéria por ID")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Matéria consultada com sucesso"),
+			@ApiResponse(code = 404, message = "Matéria não encontrada"),
+			@ApiResponse(code = 500, message = "Erro interno no servidor")
+	})
 	@GetMapping("/{id}")
 	public ResponseEntity<Response<MateriaDto>> consultarMateria(@PathVariable Long id) {
 		Response<MateriaDto> response = new Response<>();
@@ -54,6 +72,12 @@ public class MateriaController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation("Cadastrar nova matéria")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message = "Matéria cadastrada com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição do cliente"),
+			@ApiResponse(code = 500, message = "Erro interno no servidor")
+	})
 	@PostMapping
 	public ResponseEntity<Response<Boolean>> cadastrarMaterias(@Valid @RequestBody MateriaDto materia) {
 		Response<Boolean> response = new Response<>();
@@ -68,6 +92,13 @@ public class MateriaController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
+	@ApiOperation("Atualizar uma matéria")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Matéria atualizada com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição"),
+			@ApiResponse(code = 404, message = "Matéria não encontrada"),
+			@ApiResponse(code = 500, message = "Erro interno no servidor")
+	})
 	@PutMapping
 	public ResponseEntity<Response<Boolean>> atualizarMateria(@Valid @RequestBody MateriaDto materia) {
 		Response<Boolean> response = new Response<>();
@@ -86,6 +117,13 @@ public class MateriaController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation("Deletar uma matéria")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Matéria excluida com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição"),
+			@ApiResponse(code = 404, message = "Matéria não encontrada"),
+			@ApiResponse(code = 500, message = "Erro interno no servidor")
+	})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response<Boolean>> deletarMateria(@PathVariable Long id) {
 		Response<Boolean> response = new Response<>();
@@ -98,6 +136,12 @@ public class MateriaController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation("Listar matérias por horário minimo")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Matérias listadas com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição"),
+			@ApiResponse(code = 500, message = "Erro interno no servidor")
+	})
 	@GetMapping("/horario-minimo/{horaMinima}")
 	public ResponseEntity<Response<List<MateriaDto>>> consultarMateriaPorHoraMinima(@PathVariable int horaMinima) {
 		Response<List<MateriaDto>> response = new Response<>();
@@ -112,6 +156,12 @@ public class MateriaController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation("Listar matérias por frequência")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Matérias listadas com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição"),
+			@ApiResponse(code = 500, message = "Erro interno no servidor")
+	})
 	@GetMapping("/frequencia/{frequencia}")
 	public ResponseEntity<Response<List<MateriaDto>>> consultarMateriaPorFrequencia(@PathVariable int frequencia) {
 		Response<List<MateriaDto>> response = new Response<>();

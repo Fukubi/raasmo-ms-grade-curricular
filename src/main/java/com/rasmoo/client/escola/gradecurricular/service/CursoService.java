@@ -58,7 +58,7 @@ public class CursoService implements ICursoService {
 			curso.getMaterias().forEach(materiaId -> {
 				Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(materiaId);
 				if (materiaOptional.isEmpty()) {
-					throw new CursoException("Matéria não encontrada", HttpStatus.NOT_FOUND);
+					throw new CursoException("Matéria não encontrada", HttpStatus.BAD_REQUEST);
 				}
 				cursoDto.getMaterias().add(materiaOptional.get());
 			});
@@ -112,6 +112,8 @@ public class CursoService implements ICursoService {
 		try {
 			CursoDto cursoDto = new CursoDto();
 			cursoDto.setMaterias(new ArrayList<>());
+			
+			this.consultarPorCodigo(curso.getCodigo());
 			
 			curso.getMaterias().forEach(materiaId -> {
 				Optional<MateriaEntity> materiaOptional = this.materiaRepository.findById(materiaId);

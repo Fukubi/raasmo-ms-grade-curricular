@@ -17,19 +17,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rasmoo.client.escola.gradecurricular.config.SwaggerConfig;
 import com.rasmoo.client.escola.gradecurricular.constant.HyperLinkConstant;
 import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
 import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
 import com.rasmoo.client.escola.gradecurricular.model.Response;
 import com.rasmoo.client.escola.gradecurricular.service.ICursoService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
+@Api(tags = SwaggerConfig.CURSO)
 @RestController
 @RequestMapping("/curso")
 public class CursoController {
 
 	@Autowired
 	private ICursoService cursoService;
-
+	
+	@ApiOperation(value = "Cadastrar um novo curso")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message = "Entidade criada com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição enviada pelo cliente"),
+			@ApiResponse(code = 500, message = "Erro interno do servidor")
+	})
 	@PostMapping
 	public ResponseEntity<Response<Boolean>> cadastrarCurso(@Valid @RequestBody CursoModel curso) {
 		Response<Boolean> response = new Response<>();
@@ -44,6 +57,11 @@ public class CursoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
+	@ApiOperation(value = "Listar todos os cursos cadastrados")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Lista de cursos exibida com sucesso"),
+			@ApiResponse(code = 500, message = "Erro interno do servidor")
+	})
 	@GetMapping
 	public ResponseEntity<Response<List<CursoDto>>> listarCurso() {
 		Response<List<CursoDto>> response = new Response<>();
@@ -54,6 +72,12 @@ public class CursoController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation(value = "Consultar curso por código")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Curso encontrado com sucesso"),
+			@ApiResponse(code = 404, message = "Curso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro interno do servidor")
+	})
 	@GetMapping("/codigo/{codCurso}")
 	public ResponseEntity<Response<CursoDto>> consultarCursoPorCodigo(@PathVariable String codCurso) {
 		Response<CursoDto> response = new Response<>();
@@ -67,6 +91,13 @@ public class CursoController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation(value = "Consultar por ID")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Entidade criada com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição enviada pelo cliente"),
+			@ApiResponse(code = 404, message = "Curso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro interno do servidor")
+	})
 	@GetMapping("/id/{id}")
 	public ResponseEntity<Response<CursoDto>> consultar(@PathVariable Long id) {
 		Response<CursoDto> response = new Response<>();
@@ -77,6 +108,13 @@ public class CursoController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation(value = "Atualizar um curso")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Curso atualizado com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição enviada pelo cliente"),
+			@ApiResponse(code = 404, message = "Curso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro interno do servidor")
+	})
 	@PutMapping
 	public ResponseEntity<Response<Boolean>> atualizarCurso(@Valid @RequestBody CursoModel curso) {
 		Response<Boolean> response = new Response<>();
@@ -89,6 +127,13 @@ public class CursoController {
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 
+	@ApiOperation(value = "Excluir um curso")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Entidade criada com sucesso"),
+			@ApiResponse(code = 400, message = "Erro na requisição enviada pelo cliente"),
+			@ApiResponse(code = 404, message = "Curso não encontrado"),
+			@ApiResponse(code = 500, message = "Erro interno do servidor")
+	})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response<Boolean>> deletarCurso(@PathVariable Long id) {
 		Response<Boolean> response = new Response<>();

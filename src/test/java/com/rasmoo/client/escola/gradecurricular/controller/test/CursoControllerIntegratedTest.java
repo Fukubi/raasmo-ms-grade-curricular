@@ -110,13 +110,13 @@ class CursoControllerIntegratedTest {
 	
 	@Test
 	void testConsultarCursosPorCodigo() {
-		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.exchange(
+		ResponseEntity<Response<CursoDto>> cursos = restTemplate.exchange(
 				"http://localhost:" + this.port + "/curso/codigo/PB001", HttpMethod.GET, null,
-				new ParameterizedTypeReference<Response<List<CursoDto>>>() {
+				new ParameterizedTypeReference<Response<CursoDto>>() {
 				});
 		
 		assertNotNull(cursos.getBody().getData());
-		assertEquals(1, cursos.getBody().getData().size());
+		assertEquals("PB001", cursos.getBody().getData().getCodigo());
 		assertEquals(200, cursos.getBody().getStatusCode());
 	}
 	
