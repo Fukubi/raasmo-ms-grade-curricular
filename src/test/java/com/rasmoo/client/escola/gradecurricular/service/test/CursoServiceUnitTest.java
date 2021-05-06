@@ -158,7 +158,7 @@ class CursoServiceUnitTest {
 	@Test
 	void testAtualizarSucesso() {
 		CursoModel cursoModel = new CursoModel();
-		cursoModel.setId(cursoEntity.getId());
+		cursoModel.setId(1L);
 		cursoModel.setNome("PROGRAMACAO BASICA");
 		cursoModel.setCodigo("PB001");
 		cursoModel.setMaterias(List.of(1L, 2L, 3L));
@@ -184,11 +184,10 @@ class CursoServiceUnitTest {
 		m3.setHoras(90);
 		m3.setNome("PROGRAMACAO ORIENTADA A OBJETOS");
 
-		cursoEntity.setId(null);
-
 		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.of(m1));
 		Mockito.when(this.materiaRepository.findById(2L)).thenReturn(Optional.of(m2));
 		Mockito.when(this.materiaRepository.findById(3L)).thenReturn(Optional.of(m3));
+		Mockito.when(this.cursoRepository.findByCodigo("PB001")).thenReturn(Optional.of(cursoEntity));
 		Mockito.when(this.cursoRepository.save(cursoEntity)).thenReturn(cursoEntity);
 
 		Boolean sucesso = this.cursoService.atualizar(cursoModel);
@@ -198,9 +197,8 @@ class CursoServiceUnitTest {
 		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
 		Mockito.verify(this.materiaRepository, times(1)).findById(2L);
 		Mockito.verify(this.materiaRepository, times(1)).findById(3L);
+		Mockito.verify(this.cursoRepository, times(1)).findByCodigo("PB001");
 		Mockito.verify(this.cursoRepository, times(1)).save(cursoEntity);
-
-		cursoEntity.setId(1L);
 	}
 
 	@Test
@@ -221,7 +219,7 @@ class CursoServiceUnitTest {
 		cursoModel.setCodigo("PB001");
 		cursoModel.setMaterias(List.of(1L, 2L, 3L));
 
-		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.empty());
+		Mockito.when(this.cursoRepository.findByCodigo("PB001")).thenReturn(Optional.empty());
 
 		CursoException cursoException;
 
@@ -230,9 +228,10 @@ class CursoServiceUnitTest {
 		});
 
 		assertEquals(HttpStatus.NOT_FOUND, cursoException.getHttpStatus());
-		assertEquals("Matéria não encontrada", cursoException.getMessage());
+		assertEquals("Curso não encontrado", cursoException.getMessage());
 
-		Mockito.verify(this.materiaRepository, times(1)).findById(1L);
+		Mockito.verify(this.cursoRepository, times(1)).findByCodigo("PB001");
+		Mockito.verify(this.materiaRepository, times(0)).findById(1L);
 		Mockito.verify(this.materiaRepository, times(0)).findById(2L);
 		Mockito.verify(this.materiaRepository, times(0)).findById(3L);
 		Mockito.verify(this.cursoRepository, times(0)).save(cursoEntity);
@@ -334,6 +333,7 @@ class CursoServiceUnitTest {
 		m3.setHoras(90);
 		m3.setNome("PROGRAMACAO ORIENTADA A OBJETOS");
 
+		Mockito.when(this.cursoRepository.findByCodigo("PB001")).thenReturn(Optional.of(cursoEntity));
 		Mockito.when(this.materiaRepository.findById(1L)).thenReturn(Optional.of(m1));
 		Mockito.when(this.materiaRepository.findById(2L)).thenReturn(Optional.of(m2));
 		Mockito.when(this.materiaRepository.findById(3L)).thenReturn(Optional.of(m3));

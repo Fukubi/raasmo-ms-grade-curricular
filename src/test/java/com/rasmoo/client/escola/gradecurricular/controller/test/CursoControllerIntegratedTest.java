@@ -98,7 +98,7 @@ class CursoControllerIntegratedTest {
 
 	@Test
 	void testListarCursos() {
-		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.exchange(
+		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
 				"http://localhost:" + this.port + "/curso/", HttpMethod.GET, null,
 				new ParameterizedTypeReference<Response<List<CursoDto>>>() {
 				});
@@ -110,7 +110,7 @@ class CursoControllerIntegratedTest {
 	
 	@Test
 	void testConsultarCursosPorCodigo() {
-		ResponseEntity<Response<CursoDto>> cursos = restTemplate.exchange(
+		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
 				"http://localhost:" + this.port + "/curso/codigo/PB001", HttpMethod.GET, null,
 				new ParameterizedTypeReference<Response<CursoDto>>() {
 				});
@@ -129,7 +129,7 @@ class CursoControllerIntegratedTest {
 		
 		HttpEntity<CursoModel> request = new HttpEntity<>(this.converterCursoEntityParaModel(curso));
 		
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.exchange(
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
 				"http://localhost:" + this.port + "/curso", HttpMethod.PUT, request,
 				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
@@ -154,7 +154,7 @@ class CursoControllerIntegratedTest {
 		
 		HttpEntity<CursoModel> request = new HttpEntity<>(curso);
 		
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.exchange(
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
 				"http://localhost:" + this.port + "/curso", HttpMethod.POST, request,
 				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
@@ -170,7 +170,7 @@ class CursoControllerIntegratedTest {
 	void testExcluirCursoPorId() {
 		CursoEntity curso = this.cursoRepository.findAll().get(0);
 		
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.exchange(
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
 				"http://localhost:" + this.port + "/curso/" + curso.getId(), HttpMethod.DELETE, null,
 				new ParameterizedTypeReference<Response<Boolean>>() {
 				});

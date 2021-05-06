@@ -85,7 +85,7 @@ class CursoControllerUnitTest {
 	void testListarCurso() {
 		Mockito.when(this.cursoService.listar()).thenReturn(new ArrayList<CursoDto>());
 
-		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.exchange(
+		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
 				"http://localhost:" + this.port + "/curso/", HttpMethod.GET, null,
 				new ParameterizedTypeReference<Response<List<CursoDto>>>() {
 				});
@@ -98,7 +98,7 @@ class CursoControllerUnitTest {
 	void testConsultarCurso() {
 		Mockito.when(this.cursoService.consultar(1L)).thenReturn(cursoDto);
 
-		ResponseEntity<Response<CursoDto>> cursos = restTemplate.exchange("http://localhost:" + this.port + "/curso/id/1",
+		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/id/1",
 				HttpMethod.GET, null, new ParameterizedTypeReference<Response<CursoDto>>() {
 				});
 
@@ -110,7 +110,7 @@ class CursoControllerUnitTest {
 	void testConsultarCursoPorCodigo() {
 		Mockito.when(this.cursoService.consultarPorCodigo("PB001")).thenReturn(cursoDto);
 
-		ResponseEntity<Response<CursoDto>> cursos = restTemplate.exchange("http://localhost:" + this.port + "/curso/codigo/PB001",
+		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/codigo/PB001",
 				HttpMethod.GET, null, new ParameterizedTypeReference<Response<CursoDto>>() {
 				});
 
@@ -126,7 +126,7 @@ class CursoControllerUnitTest {
 
 		HttpEntity<CursoModel> request = new HttpEntity<>(cursoModel);
 
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.exchange("http://localhost:" + this.port + "/curso/",
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/",
 				HttpMethod.POST, request, new ParameterizedTypeReference<Response<Boolean>>() {
 				});
 
@@ -142,7 +142,7 @@ class CursoControllerUnitTest {
 
 		HttpEntity<CursoModel> request = new HttpEntity<>(cursoModel);
 
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.exchange("http://localhost:" + this.port + "/curso/",
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/",
 				HttpMethod.PUT, request, new ParameterizedTypeReference<Response<Boolean>>() {
 				});
 
@@ -154,7 +154,7 @@ class CursoControllerUnitTest {
 	void testExcluirCurso() {
 		Mockito.when(this.cursoService.excluir(1L)).thenReturn(Boolean.TRUE);
 
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.exchange("http://localhost:" + this.port + "/curso/1",
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/1",
 				HttpMethod.DELETE, null, new ParameterizedTypeReference<Response<Boolean>>() {
 				});
 
