@@ -22,13 +22,13 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
 import com.rasmoo.client.escola.gradecurricular.entity.CursoEntity;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
-import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
-import com.rasmoo.client.escola.gradecurricular.model.Response;
 import com.rasmoo.client.escola.gradecurricular.repository.ICursoRepository;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
+import com.rasmoo.client.escola.gradecurricular.v1.dto.CursoDto;
+import com.rasmoo.client.escola.gradecurricular.v1.model.CursoModel;
+import com.rasmoo.client.escola.gradecurricular.v1.model.Response;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @RunWith(JUnitPlatform.class)
@@ -42,9 +42,10 @@ class CursoControllerIntegratedTest {
 
 	@Autowired
 	private ICursoRepository cursoRepository;
-	
+
 	@Autowired
 	private IMateriaRepository materiaRepository;
+
 	@BeforeEach
 	public void init() {
 		this.montaBaseDeDados();
@@ -98,49 +99,49 @@ class CursoControllerIntegratedTest {
 
 	@Test
 	void testListarCursos() {
-		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
-				"http://localhost:" + this.port + "/curso/", HttpMethod.GET, null,
-				new ParameterizedTypeReference<Response<List<CursoDto>>>() {
-				});
-		
+		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular")
+				.exchange("http://localhost:" + this.port + "/v1/curso/", HttpMethod.GET, null,
+						new ParameterizedTypeReference<Response<List<CursoDto>>>() {
+						});
+
 		assertNotNull(cursos.getBody().getData());
 		assertEquals(3, cursos.getBody().getData().size());
 		assertEquals(200, cursos.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testConsultarCursosPorCodigo() {
 		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
-				"http://localhost:" + this.port + "/curso/codigo/PB001", HttpMethod.GET, null,
+				"http://localhost:" + this.port + "/v1/curso/codigo/PB001", HttpMethod.GET, null,
 				new ParameterizedTypeReference<Response<CursoDto>>() {
 				});
-		
+
 		assertNotNull(cursos.getBody().getData());
 		assertEquals("PB001", cursos.getBody().getData().getCodigo());
 		assertEquals(200, cursos.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testAtualizarCurso() {
 		List<CursoEntity> cursoList = this.cursoRepository.findAll();
 		CursoEntity curso = cursoList.get(0);
-		
+
 		curso.setNome("TESTE ATUALIZA CURSO");
-		
+
 		HttpEntity<CursoModel> request = new HttpEntity<>(this.converterCursoEntityParaModel(curso));
-		
+
 		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
-				"http://localhost:" + this.port + "/curso", HttpMethod.PUT, request,
+				"http://localhost:" + this.port + "/v1/curso", HttpMethod.PUT, request,
 				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
-		
+
 		CursoEntity cursoAtualizado = this.cursoRepository.findById(curso.getId()).get();
-		
+
 		assertTrue(cursos.getBody().getData());
 		assertEquals("TESTE ATUALIZA CURSO", cursoAtualizado.getNome());
 		assertEquals(200, cursos.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testCadastrarCurso() {
 		CursoModel curso = new CursoModel();
@@ -151,37 +152,37 @@ class CursoControllerIntegratedTest {
 		materias.forEach(materia -> {
 			curso.getMaterias().add(materia.getId());
 		});
-		
+
 		HttpEntity<CursoModel> request = new HttpEntity<>(curso);
-		
+
 		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
-				"http://localhost:" + this.port + "/curso", HttpMethod.POST, request,
+				"http://localhost:" + this.port + "/v1/curso", HttpMethod.POST, request,
 				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
-		
+
 		List<CursoEntity> cursoList = this.cursoRepository.findAll();
-		
+
 		assertTrue(cursos.getBody().getData());
 		assertEquals(4, cursoList.size());
 		assertEquals(201, cursos.getBody().getStatusCode());
 	}
-	
+
 	@Test
 	void testExcluirCursoPorId() {
 		CursoEntity curso = this.cursoRepository.findAll().get(0);
-		
+
 		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
-				"http://localhost:" + this.port + "/curso/" + curso.getId(), HttpMethod.DELETE, null,
+				"http://localhost:" + this.port + "/v1/curso/" + curso.getId(), HttpMethod.DELETE, null,
 				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
-		
+
 		List<CursoEntity> cursoList = this.cursoRepository.findAll();
-		
+
 		assertTrue(cursos.getBody().getData());
 		assertEquals(2, cursoList.size());
 		assertEquals(200, cursos.getBody().getStatusCode());
 	}
-	
+
 	private CursoModel converterCursoEntityParaModel(CursoEntity cursoEntity) {
 		CursoModel cursoModel = new CursoModel();
 		cursoModel.setCodigo(cursoEntity.getCodigo());

@@ -1,4 +1,4 @@
-package com.rasmoo.client.escola.gradecurricular.model;
+package com.rasmoo.client.escola.gradecurricular.v1.model;
 
 import org.springframework.hateoas.RepresentationModel;
 

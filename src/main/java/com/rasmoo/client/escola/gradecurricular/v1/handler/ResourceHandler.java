@@ -1,4 +1,4 @@
-package com.rasmoo.client.escola.gradecurricular.handler;
+package com.rasmoo.client.escola.gradecurricular.v1.handler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.rasmoo.client.escola.gradecurricular.exception.CursoException;
-import com.rasmoo.client.escola.gradecurricular.exception.MateriaException;
-import com.rasmoo.client.escola.gradecurricular.model.Response;
+import com.rasmoo.client.escola.gradecurricular.v1.exception.CursoException;
+import com.rasmoo.client.escola.gradecurricular.v1.exception.MateriaException;
+import com.rasmoo.client.escola.gradecurricular.v1.model.Response;
 
 @ControllerAdvice
 public class ResourceHandler {

@@ -1,9 +1,9 @@
-package com.rasmoo.client.escola.gradecurricular.service;
+package com.rasmoo.client.escola.gradecurricular.v1.service;
 
 import java.util.List;
 
-import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
-import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
+import com.rasmoo.client.escola.gradecurricular.v1.dto.CursoDto;
+import com.rasmoo.client.escola.gradecurricular.v1.model.CursoModel;
 
 public interface ICursoService {
 

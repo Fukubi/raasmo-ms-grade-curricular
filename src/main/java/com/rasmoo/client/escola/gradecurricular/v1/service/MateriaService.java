@@ -1,4 +1,4 @@
-package com.rasmoo.client.escola.gradecurricular.service;
+package com.rasmoo.client.escola.gradecurricular.v1.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,11 +12,11 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.rasmoo.client.escola.gradecurricular.controller.MateriaController;
-import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
-import com.rasmoo.client.escola.gradecurricular.exception.MateriaException;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
+import com.rasmoo.client.escola.gradecurricular.v1.controller.MateriaController;
+import com.rasmoo.client.escola.gradecurricular.v1.dto.MateriaDto;
+import com.rasmoo.client.escola.gradecurricular.v1.exception.MateriaException;
 
 @CacheConfig(cacheNames = "materia")
 @Service

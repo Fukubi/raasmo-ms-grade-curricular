@@ -1,8 +1,8 @@
-package com.rasmoo.client.escola.gradecurricular.service;
+package com.rasmoo.client.escola.gradecurricular.v1.service;
 
 import java.util.List;
 
-import com.rasmoo.client.escola.gradecurricular.dto.MateriaDto;
+import com.rasmoo.client.escola.gradecurricular.v1.dto.MateriaDto;
 
 public interface IMateriaService {
 	

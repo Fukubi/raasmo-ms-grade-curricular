@@ -21,14 +21,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
 import com.rasmoo.client.escola.gradecurricular.entity.CursoEntity;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
-import com.rasmoo.client.escola.gradecurricular.exception.CursoException;
-import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
 import com.rasmoo.client.escola.gradecurricular.repository.ICursoRepository;
 import com.rasmoo.client.escola.gradecurricular.repository.IMateriaRepository;
-import com.rasmoo.client.escola.gradecurricular.service.CursoService;
+import com.rasmoo.client.escola.gradecurricular.v1.dto.CursoDto;
+import com.rasmoo.client.escola.gradecurricular.v1.exception.CursoException;
+import com.rasmoo.client.escola.gradecurricular.v1.model.CursoModel;
+import com.rasmoo.client.escola.gradecurricular.v1.service.CursoService;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnitPlatform.class)
@@ -89,7 +89,7 @@ class CursoServiceUnitTest {
 		assertEquals(1L, listCursoDto.get(0).getId());
 		assertEquals("PROGRAMACAO BASICA", listCursoDto.get(0).getNome());
 		assertEquals("PB001", listCursoDto.get(0).getCodigo());
-		assertEquals("/curso/id/1", listCursoDto.get(0).getLinks().getRequiredLink("self").getHref());
+		assertEquals("/v1/curso/id/1", listCursoDto.get(0).getLinks().getRequiredLink("self").getHref());
 		assertEquals(1, listCursoDto.size());
 
 		Mockito.verify(this.cursoRepository, times(1)).findAll();

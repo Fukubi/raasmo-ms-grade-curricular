@@ -24,11 +24,11 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
-import com.rasmoo.client.escola.gradecurricular.dto.CursoDto;
 import com.rasmoo.client.escola.gradecurricular.entity.MateriaEntity;
-import com.rasmoo.client.escola.gradecurricular.model.CursoModel;
-import com.rasmoo.client.escola.gradecurricular.model.Response;
-import com.rasmoo.client.escola.gradecurricular.service.ICursoService;
+import com.rasmoo.client.escola.gradecurricular.v1.dto.CursoDto;
+import com.rasmoo.client.escola.gradecurricular.v1.model.CursoModel;
+import com.rasmoo.client.escola.gradecurricular.v1.model.Response;
+import com.rasmoo.client.escola.gradecurricular.v1.service.ICursoService;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -85,10 +85,10 @@ class CursoControllerUnitTest {
 	void testListarCurso() {
 		Mockito.when(this.cursoService.listar()).thenReturn(new ArrayList<CursoDto>());
 
-		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
-				"http://localhost:" + this.port + "/curso/", HttpMethod.GET, null,
-				new ParameterizedTypeReference<Response<List<CursoDto>>>() {
-				});
+		ResponseEntity<Response<List<CursoDto>>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular")
+				.exchange("http://localhost:" + this.port + "/v1/curso/", HttpMethod.GET, null,
+						new ParameterizedTypeReference<Response<List<CursoDto>>>() {
+						});
 
 		assertNotNull(cursos.getBody().getData());
 		assertEquals(200, cursos.getStatusCode().value());
@@ -98,26 +98,28 @@ class CursoControllerUnitTest {
 	void testConsultarCurso() {
 		Mockito.when(this.cursoService.consultar(1L)).thenReturn(cursoDto);
 
-		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/id/1",
-				HttpMethod.GET, null, new ParameterizedTypeReference<Response<CursoDto>>() {
+		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
+				"http://localhost:" + this.port + "/v1/curso/id/1", HttpMethod.GET, null,
+				new ParameterizedTypeReference<Response<CursoDto>>() {
 				});
 
 		assertNotNull(cursos.getBody().getData());
 		assertEquals(200, cursos.getStatusCode().value());
 	}
-	
+
 	@Test
 	void testConsultarCursoPorCodigo() {
 		Mockito.when(this.cursoService.consultarPorCodigo("PB001")).thenReturn(cursoDto);
 
-		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/codigo/PB001",
-				HttpMethod.GET, null, new ParameterizedTypeReference<Response<CursoDto>>() {
+		ResponseEntity<Response<CursoDto>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
+				"http://localhost:" + this.port + "/v1/curso/codigo/PB001", HttpMethod.GET, null,
+				new ParameterizedTypeReference<Response<CursoDto>>() {
 				});
 
 		assertNotNull(cursos.getBody().getData());
 		assertEquals(200, cursos.getStatusCode().value());
 	}
-	
+
 	@Test
 	void testCadastrarCurso() {
 		CursoModel cursoModel = this.converterCursoDtoParaModel(cursoDto);
@@ -126,14 +128,15 @@ class CursoControllerUnitTest {
 
 		HttpEntity<CursoModel> request = new HttpEntity<>(cursoModel);
 
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/",
-				HttpMethod.POST, request, new ParameterizedTypeReference<Response<Boolean>>() {
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
+				"http://localhost:" + this.port + "/v1/curso/", HttpMethod.POST, request,
+				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
 
 		assertNotNull(cursos.getBody().getData());
 		assertEquals(201, cursos.getStatusCode().value());
 	}
-	
+
 	@Test
 	void testAtualizarCurso() {
 		CursoModel cursoModel = this.converterCursoDtoParaModel(cursoDto);
@@ -142,20 +145,22 @@ class CursoControllerUnitTest {
 
 		HttpEntity<CursoModel> request = new HttpEntity<>(cursoModel);
 
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/",
-				HttpMethod.PUT, request, new ParameterizedTypeReference<Response<Boolean>>() {
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
+				"http://localhost:" + this.port + "/v1/curso/", HttpMethod.PUT, request,
+				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
 
 		assertNotNull(cursos.getBody().getData());
 		assertEquals(200, cursos.getStatusCode().value());
 	}
-	
+
 	@Test
 	void testExcluirCurso() {
 		Mockito.when(this.cursoService.excluir(1L)).thenReturn(Boolean.TRUE);
 
-		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange("http://localhost:" + this.port + "/curso/1",
-				HttpMethod.DELETE, null, new ParameterizedTypeReference<Response<Boolean>>() {
+		ResponseEntity<Response<Boolean>> cursos = restTemplate.withBasicAuth("rasmoo", "msgradecurricular").exchange(
+				"http://localhost:" + this.port + "/v1/curso/1", HttpMethod.DELETE, null,
+				new ParameterizedTypeReference<Response<Boolean>>() {
 				});
 
 		assertNotNull(cursos.getBody().getData());

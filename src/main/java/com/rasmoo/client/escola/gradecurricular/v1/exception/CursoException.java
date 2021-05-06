@@ -1,4 +1,4 @@
-package com.rasmoo.client.escola.gradecurricular.exception;
+package com.rasmoo.client.escola.gradecurricular.v1.exception;
 
 import org.springframework.http.HttpStatus;
 

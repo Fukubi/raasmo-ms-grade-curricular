@@ -1,4 +1,4 @@
-package com.rasmoo.client.escola.gradecurricular.dto;
+package com.rasmoo.client.escola.gradecurricular.v1.dto;
 
 import java.util.List;
 
