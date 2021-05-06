@@ -158,6 +158,7 @@ class CursoServiceUnitTest {
 	@Test
 	void testAtualizarSucesso() {
 		CursoModel cursoModel = new CursoModel();
+		cursoModel.setId(cursoEntity.getId());
 		cursoModel.setNome("PROGRAMACAO BASICA");
 		cursoModel.setCodigo("PB001");
 		cursoModel.setMaterias(List.of(1L, 2L, 3L));
